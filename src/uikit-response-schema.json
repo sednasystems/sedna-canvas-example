@@ -1,0 +1,1692 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://app.sednanetwork.com/uikit/2024-06-01/response.schema.json",
+  "title": "Sedna Link Response Schema",
+  "description": "The response schema for Sedna Link protocol exchange",
+  "type": "object",
+  "properties": {
+    "surfaces": {
+      "title": "Surfaces",
+      "description": "The surfaces where the app will render",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/surfaces/properties/panel"
+          },
+          {
+            "$ref": "#/$defs/surfaces/properties/modal"
+          },
+          {
+            "$ref": "#/$defs/surfaces/properties/dashboard"
+          },
+          {
+            "$ref": "#/$defs/surfaces/properties/card"
+          }
+        ]
+      },
+      "minItems": 1
+    },
+    "state": {
+      "title": "State",
+      "description": "Determines the states of various blocks or elements, keyed by the id of a block or element",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]+$": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Describes notifications (e.g. toasts) to show.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "level": {
+            "enum": ["INFO", "WARNING", "ERROR"]
+          },
+          "button": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "href": {
+                "type": "string"
+              },
+              "action": {
+                "type": "string",
+                "enum": ["custom"]
+              }
+            },
+            "anyOf": [
+              {
+                "required": ["id", "label", "href"]
+              },
+              {
+                "required": ["id", "label", "action"]
+              }
+            ]
+          }
+        },
+        "required": ["id", "message", "level"]
+      }
+    },
+    "validationErrors": {
+      "title": "Validation errors",
+      "description": "Describes validation errors to show next to controls.",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]+$": {
+          "type": "string"
+        }
+      }
+    },
+    "stale": {
+      "title": "Stale",
+      "description": "Entities that have been updated in the current exchange",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "MESSAGE",
+              "PULSE_POSITION",
+              "PULSE_CARGO",
+              "PULSE_POSITION_FIXTURE_WORKSPACE",
+              "PULSE_CARGO_FIXTURE_WORKSPACE",
+              "CRM_PERSON",
+              "CRM_DEPARTMENT",
+              "CRM_COMPANY",
+              "CRM_CONTACT_GROUP"
+            ]
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": ["type", "id"]
+      }
+    }
+  },
+  "required": ["surfaces"],
+  "$defs": {
+    "surfaces": {
+      "type": "object",
+      "properties": {
+        "panel": {
+          "title": "Panel",
+          "description": "A Panel is a narrow surface that appears on the side of the screen",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["panel"]
+            },
+            "id": {
+              "type": "string"
+            },
+            "blocks": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/blocks/properties/header"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/row"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/section"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/footer"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/divider"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/tabs"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/iframe"
+                  }
+                ]
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["type", "id", "blocks"]
+        },
+        "modal": {
+          "title": "Modal",
+          "description": "A Modal is a surface that appears as a dialog layered over the screen",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["modal"]
+            },
+            "id": {
+              "type": "string"
+            },
+            "blocks": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/blocks/properties/header"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/row"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/section"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/footer"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/divider"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/tabs"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/iframe"
+                  }
+                ]
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["type", "id", "blocks"]
+        },
+        "dashboard": {
+          "title": "Dashboard",
+          "description": "A Dashboard is a surface that appears as a full width portion of the screen",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["dashboard"]
+            },
+            "id": {
+              "type": "string"
+            },
+            "blocks": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/blocks/properties/header"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/section"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/row"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/footer"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/divider"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/tabs"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/iframe"
+                  }
+                ]
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["type", "id", "blocks"]
+        },
+        "card": {
+          "title": "Card",
+          "description": "A Card is a surface that appears as a small portion of the screen",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["card"]
+            },
+            "id": {
+              "type": "string"
+            },
+            "blocks": {
+              "type": "array",
+              "description": "The blocks that will be rendered in the Card",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/blocks/properties/header"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/section"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/row"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/divider"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/footer"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/iframe"
+                  }
+                ]
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["type", "id", "blocks"]
+        }
+      }
+    },
+    "blocks": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "title": "Header",
+          "description": "The Header block of a surface",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["header"]
+            },
+            "title": {
+              "type": "string"
+            },
+            "elements": {
+              "description": "Elements that can be added on the left of the Header",
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/elements/properties/filterDropdown"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/filterButtons"
+                  }
+                ]
+              },
+              "minItems": 1
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["type", "title"]
+            },
+            {
+              "required": ["type", "elements"]
+            }
+          ]
+        },
+        "footer": {
+          "title": "Footer",
+          "description": "The Footer block of a surface",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["footer"]
+            },
+            "elements": {
+              "description": "Elements placed in the Footer",
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/elements/properties/button"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/text"
+                  }
+                ]
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["elements"]
+        },
+        "row": {
+          "title": "Row",
+          "description": "A Row block that contains elements",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["row"]
+            },
+            "justify": {
+              "type": "string",
+              "enum": ["left", "center", "right"],
+              "default": "start"
+            },
+            "elements": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/elements/properties/filterButtons"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/filterDropdown"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/textArea"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/textInput"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/numericInput"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/select"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/multiSelect"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/checkbox"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/datePicker"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/table"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/text"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/file"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/alert"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/image"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/button"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/iconButton"
+                  }
+                ]
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["type", "elements"]
+        },
+        "tabs": {
+          "title": "Tabs",
+          "description": "The Tabs block of a surface",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["tabs"]
+            },
+            "id": {
+              "type": "string"
+            },
+            "tabItems": {
+              "type": "array",
+              "description": "The tabs that will be rendered depending on tab selection",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "blocks": {
+                    "type": "array",
+                    "description": "The blocks that will be rendered in this tab",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/blocks/properties/section"
+                        },
+                        {
+                          "$ref": "#/$defs/blocks/properties/row"
+                        },
+                        {
+                          "$ref": "#/$defs/blocks/properties/divider"
+                        },
+                        {
+                          "$ref": "#/$defs/blocks/properties/iframe"
+                        }
+                      ]
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": ["label", "id", "blocks"]
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["type", "id", "tabItems"]
+        },
+        "section": {
+          "title": "Section",
+          "description": "A Section block that contains elements",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["section"]
+            },
+            "collapsible": {
+              "type": "boolean"
+            },
+            "title": {
+              "type": "string"
+            },
+            "columns": {
+              "type": "number",
+              "description": "The number of columns the Section can contain when nesting Sections",
+              "minimum": 1,
+              "maximum": 6
+            },
+            "columnSpan": {
+              "type": "number",
+              "description": "The number of columns the Section should span",
+              "minimum": 1,
+              "maximum": 6
+            },
+            "justify": {
+              "type": "string",
+              "enum": ["left", "center", "right"],
+              "default": "start"
+            },
+            "elements": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/blocks/properties/section"
+                      },
+                      {
+                        "$ref": "#/$defs/blocks/properties/row"
+                      },
+                      {
+                        "$ref": "#/$defs/blocks/properties/divider"
+                      }
+                    ]
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/elements/properties/filterButtons"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/filterDropdown"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/textArea"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/textInput"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/numericInput"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/select"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/multiSelect"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/checkbox"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/datePicker"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/table"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/text"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/file"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/alert"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/image"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/button"
+                      },
+                      {
+                        "$ref": "#/$defs/elements/properties/iconButton"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "minItems": 1
+            }
+          },
+          "oneOf": [
+            {
+              "required": ["type", "elements"]
+            },
+            {
+              "required": ["type", "elements", "title", "collapsible"]
+            }
+          ]
+        },
+        "divider": {
+          "title": "Divider",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["divider"]
+            }
+          },
+          "required": ["type"]
+        },
+        "iframe": {
+          "title": "iframe",
+          "description": "An iframe block to embed external content",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["iframe"]
+            },
+            "src": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "src"]
+        }
+      }
+    },
+    "elements": {
+      "type": "object",
+      "properties": {
+        "filterButtons": {
+          "title": "Filter Buttons",
+          "description": "Filter Buttons that can be used to filter a view based on selection",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["filterButtons"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "description": "The options that will be rendered as buttons",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": ["label", "value"]
+              }
+            }
+          },
+          "required": ["type", "id", "options"]
+        },
+        "filterDropdown": {
+          "title": "Filter Dropdown",
+          "description": "Filter Dropdown that can be used to filter a view based on selection",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["filterDropdown"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "description": "The options that will be rendered as dropdown items",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": ["label", "value"]
+              }
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["type", "id", "label"]
+            },
+            {
+              "required": ["type", "id", "placeholder"]
+            }
+          ]
+        },
+        "textArea": {
+          "title": "Text Area",
+          "description": "A Text Area field input",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["textArea"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "maxLength": {
+              "type": "number"
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["type", "id", "label"]
+            },
+            {
+              "required": ["type", "id", "placeholder"]
+            }
+          ]
+        },
+        "textInput": {
+          "title": "Text Input",
+          "description": "A Text Input field",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["textInput"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "maxLength": {
+              "type": "number"
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["type", "id", "label"]
+            },
+            {
+              "required": ["type", "id", "placeholder"]
+            }
+          ]
+        },
+        "numericInput": {
+          "title": "Numeric Input",
+          "description": "A Numeric Input field",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["numericInput"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["type", "id", "label"]
+            },
+            {
+              "required": ["type", "id", "placeholder"]
+            }
+          ]
+        },
+        "select": {
+          "title": "Select",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["select"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": ["label", "value"]
+              }
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "required": {
+              "type": "boolean"
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["type", "id", "label", "options"]
+            },
+            {
+              "required": ["type", "id", "placeholder", "options"]
+            }
+          ]
+        },
+        "multiSelect": {
+          "title": "Multi Select",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["multiSelect"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": ["label", "value"]
+              }
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "minSelection": {
+              "type": "number"
+            },
+            "maxSelection": {
+              "type": "number"
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["type", "id", "label", "options"]
+            },
+            {
+              "required": ["type", "id", "placeholder", "options"]
+            }
+          ]
+        },
+        "datePicker": {
+          "title": "Date Picker",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["datePicker"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "minDate": {
+              "type": "string"
+            },
+            "maxDate": {
+              "type": "string"
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["type", "id", "label"]
+            },
+            {
+              "required": ["type", "id", "placeholder"]
+            }
+          ]
+        },
+        "checkbox": {
+          "title": "Checkbox",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["checkbox"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "id", "label"]
+        },
+        "checkboxGroup": {
+          "title": "Checkbox Group",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["checkboxGroup"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": ["label", "value"]
+              }
+            }
+          },
+          "required": ["type", "id", "label", "options"]
+        },
+        "table": {
+          "title": "Table",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["table"]
+            },
+            "id": {
+              "type": "string"
+            },
+            "columnDefinitions": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "header": {
+                        "type": "string",
+                        "description": "The header text of the column. Header cells will not be displayed if none of the definitions have a header"
+                      },
+                      "accessor": {
+                        "type": "string",
+                        "description": "The key to access the value in the row data"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["string", "number", "date", "dateTime", "boolean"],
+                        "default": "string"
+                      },
+                      "align": {
+                        "type": "string",
+                        "enum": ["left", "center", "right"],
+                        "default": "left"
+                      },
+                      "minWidth": {
+                        "type": "number",
+                        "description": "The min width of the column in pixels"
+                      },
+                      "maxWidth": {
+                        "type": "number",
+                        "description": "The max width of the column in pixels"
+                      }
+                    },
+                    "required": ["accessor"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["checkbox"]
+                      }
+                    },
+                    "required": ["type"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["actions"]
+                      },
+                      "minWidth": {
+                        "type": "number",
+                        "description": "The min width of the column in pixels"
+                      },
+                      "actions": {
+                        "type": "array",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "label": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": ["id", "label"]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "icon": {
+                                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                                }
+                              },
+                              "required": ["id", "icon"]
+                            }
+                          ]
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": ["type", "actions"]
+                  }
+                ]
+              },
+              "minItems": 1
+            },
+            "data": {
+              "description": "The row data that will be rendered in the table based on columns",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "patternProperties": {
+                  "^[a-zA-Z0-9_-]+$": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  }
+                },
+                "required": ["id"]
+              }
+            }
+          },
+          "required": ["type", "id", "columnDefinitions", "data"]
+        },
+        "text": {
+          "title": "Text",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["text"]
+            },
+            "variant": {
+              "type": "string",
+              "enum": ["primary", "secondary", "disabled", "error"],
+              "default": "primary"
+            },
+            "typeface": {
+              "type": "string",
+              "enum": ["header1", "header2", "header3", "paragraph", "caption", "label"]
+            },
+            "content": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "content"]
+        },
+        "file": {
+          "title": "File",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["file"]
+            },
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "src": {
+              "type": "string"
+            },
+            "fileType": {
+              "type": "string",
+              "enum": [
+                "pdf",
+                "doc",
+                "docx",
+                "ppt",
+                "pptx",
+                "xls",
+                "xlsx",
+                "eml",
+                "jpg",
+                "jpeg",
+                "png",
+                "txt",
+                "zip",
+                "csv"
+              ]
+            }
+          },
+          "required": ["type", "id", "name", "src", "fileType"]
+        },
+        "alert": {
+          "title": "Alert",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["alert"]
+            },
+            "message": {
+              "type": "string"
+            },
+            "variant": {
+              "type": "string",
+              "enum": ["info", "warning", "error"]
+            }
+          },
+          "required": ["type", "message"]
+        },
+        "image": {
+          "title": "Image",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["image"]
+            },
+            "src": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "src"]
+        },
+        "button": {
+          "title": "Button",
+          "type": "object",
+          "oneOf": [
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "label": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["submit", "reset", "custom", "closeModal"]
+                },
+                "variant": {
+                  "type": "string",
+                  "enum": ["primary", "secondary", "ghost"]
+                },
+                "leftIcon": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "label", "id", "action"]
+            },
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "label": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["insertContent"]
+                },
+                "variant": {
+                  "type": "string",
+                  "enum": ["primary", "secondary", "ghost"]
+                },
+                "leftIcon": {
+                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "src": {
+                  "type": "string"
+                }
+              },
+              "anyOf": [
+                {
+                  "required": ["type", "label", "id", "action", "content"]
+                },
+                {
+                  "required": ["type", "label", "id", "action", "src"]
+                }
+              ]
+            },
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "label": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["insertAttachment"]
+                },
+                "variant": {
+                  "type": "string",
+                  "enum": ["primary", "secondary", "ghost"]
+                },
+                "leftIcon": {
+                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                },
+                "src": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "label", "id", "action", "src"]
+            },
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "label": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["openModal"]
+                },
+                "variant": {
+                  "type": "string",
+                  "enum": ["primary", "secondary", "ghost"]
+                },
+                "leftIcon": {
+                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                },
+                "surfaceId": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "label", "id", "action", "surfaceId"]
+            },
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "label": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "variant": {
+                  "type": "string",
+                  "enum": ["primary", "secondary", "ghost"]
+                },
+                "leftIcon": {
+                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                },
+                "href": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "label", "id", "href"]
+            }
+          ]
+        },
+        "iconButton": {
+          "title": "Icon Button",
+          "type": "object",
+          "oneOf": [
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "icon": {
+                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["submit", "reset", "custom", "closeModal"]
+                }
+              },
+              "required": ["type", "icon", "id", "action"]
+            },
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "icon": {
+                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["insertContent"]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "src": {
+                  "type": "string"
+                }
+              },
+              "anyOf": [
+                {
+                  "required": ["type", "icon", "id", "action", "content"]
+                },
+                {
+                  "required": ["type", "icon", "id", "action", "src"]
+                }
+              ]
+            },
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "icon": {
+                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["insertAttachment"]
+                },
+                "src": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "icon", "id", "action", "src"]
+            },
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "icon": {
+                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["openModal"]
+                },
+                "surfaceId": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "icon", "id", "action", "surfaceId"]
+            },
+            {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["button"]
+                },
+                "icon": {
+                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "href": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "icon", "id", "href"]
+            }
+          ]
+        },
+        "icon": {
+          "title": "Icon",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["icon"]
+            },
+            "name": {
+              "type": "string",
+              "enum": [
+                "addOutline",
+                "archiveAll",
+                "archive",
+                "arrowDownward",
+                "arrowLeft",
+                "arrowRight",
+                "arrowUpward",
+                "alignCenter",
+                "alignJustify",
+                "alignLeft",
+                "alignRight",
+                "asset",
+                "attachment",
+                "background",
+                "barChartHorizontal",
+                "bold",
+                "bookmarkAdd",
+                "bookmark",
+                "bookmarkStar",
+                "broadcast",
+                "bucket",
+                "bulletedList",
+                "calendar",
+                "calendarEvent",
+                "category",
+                "check",
+                "checkDouble",
+                "chevronDown",
+                "chevronLeft",
+                "chevronRight",
+                "chevronUp",
+                "code",
+                "codeView",
+                "collapseList",
+                "comment",
+                "contacts",
+                "copyFill",
+                "copyLine",
+                "clear",
+                "data",
+                "defaultFile",
+                "delete",
+                "desktop",
+                "docImage",
+                "download",
+                "drafts",
+                "dragDrop",
+                "draggable",
+                "duplicate",
+                "edit",
+                "excel",
+                "expandList",
+                "externalLink",
+                "fileEmail",
+                "filter",
+                "follow",
+                "fontFamily",
+                "fontSize",
+                "formatClear",
+                "formatColor",
+                "forward",
+                "gift",
+                "graduationCap",
+                "guides",
+                "headingOne",
+                "headingTwo",
+                "important",
+                "inbox",
+                "info",
+                "insertHr",
+                "insertLink",
+                "insertSnippet",
+                "insertTable",
+                "id",
+                "italic",
+                "job",
+                "link",
+                "lock",
+                "message",
+                "moreHoriz",
+                "moreVertical",
+                "mailMute",
+                "newFeatures",
+                "notifications",
+                "notificationStrikethrough",
+                "numberedList",
+                "openLink",
+                "outbox",
+                "pin",
+                "pdf",
+                "people",
+                "person",
+                "phone",
+                "powerpoint",
+                "printOutline",
+                "read",
+                "refresh",
+                "reply",
+                "replyAll",
+                "save",
+                "search",
+                "seen",
+                "send",
+                "settings",
+                "share",
+                "ship",
+                "sortAsc",
+                "sort",
+                "starFilled",
+                "starOutline",
+                "strikethrough",
+                "subtract",
+                "table",
+                "tablet",
+                "tag",
+                "text",
+                "time",
+                "tenant",
+                "unarchive",
+                "underline",
+                "unfollow",
+                "unimportant",
+                "unlock",
+                "upload",
+                "unpin",
+                "verified",
+                "warning",
+                "word",
+                "workflows",
+                "zip"
+              ]
+            }
+          },
+          "required": ["type", "name"]
+        }
+      }
+    }
+  }
+}

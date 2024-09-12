@@ -1,0 +1,633 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://app.sednanetwork.com/uikit/2024-06-01/request.schema.json",
+  "title": "UIKit Request Schema",
+  "description": "The request schema for UIKit protocol exchange",
+  "type": "object",
+  "properties": {
+    "appId": {
+      "description": "The unique id for the app",
+      "type": "string"
+    },
+    "version": {
+      "description": "The protocol version",
+      "type": "string",
+      "const": "2024-06-01"
+    },
+    "user": {
+      "description": "The user making the request",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": ["string", "null"]
+        },
+        "lastName": {
+          "type": ["string", "null"]
+        },
+        "defaultTeamId": {
+          "type": "string"
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entityRels/team"
+          }
+        },
+        "emailAddress": {
+          "type": ["string", "null"]
+        },
+        "ssoEmail": {
+          "type": ["string", "null"]
+        },
+        "href": {
+          "$ref": "#/$defs/href"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "firstName",
+        "lastName",
+        "defaultTeamId",
+        "teams",
+        "emailAddress",
+        "ssoEmail",
+        "href"
+      ]
+    },
+    "company": {
+      "description": "The company of the user making the request",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "name", "identifier"]
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "display": {
+          "description": "The feature the app pertains to",
+          "enum": [
+            "GLOBAL",
+            "MESSAGE_READ",
+            "MESSAGE_COMPOSE",
+            "PULSE_POSITION",
+            "PULSE_CARGO",
+            "PULSE_POSITION_FIXTURE_WORKSPACE",
+            "PULSE_CARGO_FIXTURE_WORKSPACE",
+            "CRM_PERSON",
+            "CRM_DEPARTMENT",
+            "CRM_COMPANY",
+            "CRM_CONTACT_GROUP"
+          ]
+        },
+        "entity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/entity/message"
+            },
+            {
+              "$ref": "#/$defs/entity/pulsePosition"
+            },
+            {
+              "$ref": "#/$defs/entity/pulseCargo"
+            },
+            {
+              "$ref": "#/$defs/entity/pulsePositionFixtureWorkspace"
+            },
+            {
+              "$ref": "#/$defs/entity/pulseCargoFixtureWorkspace"
+            },
+            {
+              "$ref": "#/$defs/entity/crmPerson"
+            },
+            {
+              "$ref": "#/$defs/entity/crmDepartment"
+            },
+            {
+              "$ref": "#/$defs/entity/crmCompany"
+            },
+            {
+              "$ref": "#/$defs/entity/crmContactGroup"
+            }
+          ]
+        }
+      },
+      "required": ["display"]
+    },
+    "state": {
+      "title": "State",
+      "description": "Determines the states of various blocks or elements, keyed by the id of a block or element",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]+$": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "action": {
+      "title": "Action",
+      "description": "The action to be performed by the app, where action is the id of an interactive element such as a button",
+      "type": "string"
+    }
+  },
+  "required": ["appId", "version", "user", "company", "context"],
+  "$defs": {
+    "entity": {
+      "message": {
+        "description": "A message in Sedna",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "MESSAGE"
+          },
+          "subject": {
+            "type": ["string", "null"]
+          },
+          "snippet": {
+            "type": ["string", "null"]
+          },
+          "from": {
+            "type": ["string", "null"],
+            "format": "email"
+          },
+          "to": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "cc": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "bcc": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "jobReferences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/entityRels/jobReference"
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/entityRels/category"
+            }
+          },
+          "teams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/entityRels/team"
+            }
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "subject",
+          "snippet",
+          "from",
+          "to",
+          "cc",
+          "bcc",
+          "jobReferences",
+          "categories",
+          "teams",
+          "href"
+        ]
+      },
+      "pulsePosition": {
+        "description": "A Pulse position",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "PULSE_POSITION"
+          },
+          "vessel": {
+            "$ref": "#/$defs/entityRels/pulseVessel"
+          },
+          "area": {
+            "$ref": "#/$defs/entityRels/pulseArea"
+          },
+          "openDate": {
+            "$ref": "#/$defs/entityRels/pulseDateRange"
+          },
+          "currentDwtInMt": {
+            "type": "number"
+          },
+          "customColumns": {
+            "$ref": "#/$defs/entityRels/pulseCustomColumns"
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "vessel",
+          "area",
+          "openDate",
+          "currentDwtInMt",
+          "customColumns",
+          "href"
+        ]
+      },
+      "pulseCargo": {
+        "description": "A Pulse cargo",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "const": "PULSE_CARGO"
+          },
+          "loadAreas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/entityRels/pulseArea"
+            }
+          },
+          "dischargeAreas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/entityRels/pulseArea"
+            }
+          },
+          "loadDate": {
+            "$ref": "#/$defs/entityRels/pulseDateRange"
+          },
+          "size": {
+            "type": ["object", "null"],
+            "properties": {
+              "from": {
+                "type": "number"
+              },
+              "to": {
+                "type": "number"
+              }
+            }
+          },
+          "cargo": {
+            "type": ["string", "null"]
+          },
+          "charterer": {
+            "type": ["string", "null"]
+          },
+          "charterType": {
+            "enum": [null, "TIME", "VOYAGE", "UNKNOWN"]
+          },
+          "customColumns": {
+            "$ref": "#/$defs/entityRels/pulseCustomColumns"
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "loadAreas",
+          "dischargeAreas",
+          "loadDate",
+          "size",
+          "cargo",
+          "charterer",
+          "charterType",
+          "customColumns",
+          "href"
+        ]
+      },
+      "pulsePositionFixtureWorkspace": {
+        "description": "A Pulse position fixture workspace",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "PULSE_POSITION_FIXTURE_WORKSPACE"
+          },
+          "name": {
+            "type": "string"
+          },
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cargoIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": ["id", "type", "name", "userIds", "cargoIds", "href"]
+      },
+      "pulseCargoFixtureWorkspace": {
+        "description": "A Pulse cargo fixture workspace",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "PULSE_CARGO_FIXTURE_WORKSPACE"
+          },
+          "name": {
+            "type": "string"
+          },
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "positionIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": ["id", "type", "name", "userIds", "positionIds", "href"]
+      },
+      "crmPerson": {
+        "description": "A person from the CRM entity system",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "CRM_PERSON"
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": ["id", "href"]
+      },
+      "crmDepartment": {
+        "description": "A department from the CRM entity system",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "CRM_DEPARTMENT"
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": ["id", "href"]
+      },
+      "crmCompany": {
+        "description": "A company from the CRM entity system",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "CRM_COMPANY"
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": ["id", "href"]
+      },
+      "crmContactGroup": {
+        "description": "A contact group from the CRM entity system",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "CRM_CONTACT_GROUP"
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": ["id", "href"]
+      }
+    },
+    "entityRels": {
+      "team": {
+        "description": "A Sedna team",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "foreignKey": {
+            "type": ["string", "null"]
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": ["id", "name", "foreignKey", "href"]
+      },
+      "jobReference": {
+        "description": "A job reference",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": ["string", "null"]
+          },
+          "foreignKey": {
+            "type": ["string", "null"]
+          },
+          "type": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "object"
+          },
+          "source": {
+            "type": ["string", "null"]
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": ["id", "name", "foreignKey", "type", "attributes", "source", "href"]
+      },
+      "category": {
+        "description": "A category",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": ["string", "null"]
+          },
+          "href": {
+            "$ref": "#/$defs/href"
+          }
+        },
+        "required": ["id", "name", "label", "href"]
+      },
+      "pulseVessel": {
+        "description": "A Pulse vessel, related to a position",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "imo": {
+            "type": ["string", "null"]
+          }
+        },
+        "required": ["id", "name", "imo"]
+      },
+      "pulseArea": {
+        "description": "A Pulse area, related to positions and cargoes",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": ["string", "null"]
+          },
+          "geo": {
+            "type": ["string", "null"]
+          }
+        },
+        "required": ["id", "name", "type", "geo"]
+      },
+      "pulseDateRange": {
+        "description": "A range of dates used in Pulse. No timezone or time information. Formatted as YYYY-MM-DD.",
+        "type": ["object", "null"],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": ["from", "to"]
+      },
+      "pulseCustomColumns": {
+        "type": ["object", "null"],
+        "patternProperties": {
+          "^[a-zA-Z0-9_-]+$": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": ["null", "string", "number", "boolean"]
+              },
+              "link": {
+                "type": "string"
+              },
+              "popover": {
+                "type": "string"
+              }
+            },
+            "required": ["value"]
+          }
+        }
+      }
+    },
+    "href": {
+      "type": "string",
+      "format": "uri"
+    }
+  }
+}
