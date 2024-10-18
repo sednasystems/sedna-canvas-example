@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://app.sednanetwork.com/uikit/2024-06-01/response.schema.json",
+  "$id": "https://app.sednanetwork.com/canvas/2024-06-01/response.schema.json",
   "title": "Sedna Link Response Schema",
   "description": "The response schema for Sedna Link protocol exchange",
   "type": "object",
@@ -60,6 +60,30 @@
         }
       }
     },
+    "referenceData": {
+      "title": "Reference data",
+      "description": "Source of the data of various blocks or elements, keyed by the reference id",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]+$": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "notifications": {
       "title": "Notifications",
       "description": "Describes notifications (e.g. toasts) to show.",
@@ -93,7 +117,7 @@
                 "enum": ["custom"]
               }
             },
-            "anyOf": [
+            "oneOf": [
               {
                 "required": ["id", "label", "href"]
               },
@@ -143,10 +167,84 @@
         },
         "required": ["type", "id"]
       }
+    },
+    "mutation": {
+      "title": "Mutation",
+      "description": "The mutation to be executed",
+      "type": "object",
+      "properties": {
+        "entity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/entity/message"
+            }
+          ]
+        }
+      },
+      "required": ["entity"]
     }
   },
   "required": ["surfaces"],
   "$defs": {
+    "entity": {
+      "message": {
+        "description": "A message in Sedna",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "MESSAGE"
+          },
+          "subject": {
+            "type": ["string", "null"]
+          },
+          "from": {
+            "type": ["string", "null"],
+            "format": "email"
+          },
+          "to": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "cc": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "bcc": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          }
+        },
+        "oneOf": [
+          {
+            "required": ["id", "type", "subject"]
+          },
+          {
+            "required": ["id", "type", "from"]
+          },
+          {
+            "required": ["id", "type", "to"]
+          },
+          {
+            "required": ["id", "type", "cc"]
+          },
+          {
+            "required": ["id", "type", "bcc"]
+          }
+        ]
+      }
+    },
     "surfaces": {
       "type": "object",
       "properties": {
@@ -205,6 +303,12 @@
             },
             "id": {
               "type": "string"
+            },
+            "defaultOpen": {
+              "type": "boolean"
+            },
+            "wide": {
+              "type": "boolean"
             },
             "blocks": {
               "type": "array",
@@ -357,7 +461,7 @@
               "minItems": 1
             }
           },
-          "anyOf": [
+          "oneOf": [
             {
               "required": ["type", "title"]
             },
@@ -427,6 +531,9 @@
                     "$ref": "#/$defs/elements/properties/numericInput"
                   },
                   {
+                    "$ref": "#/$defs/elements/properties/hiddenInput"
+                  },
+                  {
                     "$ref": "#/$defs/elements/properties/select"
                   },
                   {
@@ -445,6 +552,9 @@
                     "$ref": "#/$defs/elements/properties/text"
                   },
                   {
+                    "$ref": "#/$defs/elements/properties/markdown"
+                  },
+                  {
                     "$ref": "#/$defs/elements/properties/file"
                   },
                   {
@@ -458,6 +568,9 @@
                   },
                   {
                     "$ref": "#/$defs/elements/properties/iconButton"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/dropdown"
                   }
                 ]
               },
@@ -554,71 +667,72 @@
             "elements": {
               "type": "array",
               "items": {
-                "oneOf": [
+                "anyOf": [
                   {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/blocks/properties/section"
-                      },
-                      {
-                        "$ref": "#/$defs/blocks/properties/row"
-                      },
-                      {
-                        "$ref": "#/$defs/blocks/properties/divider"
-                      }
-                    ]
+                    "$ref": "#/$defs/blocks/properties/section"
                   },
                   {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/elements/properties/filterButtons"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/filterDropdown"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/textArea"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/textInput"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/numericInput"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/select"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/multiSelect"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/checkbox"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/datePicker"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/table"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/text"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/file"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/alert"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/image"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/button"
-                      },
-                      {
-                        "$ref": "#/$defs/elements/properties/iconButton"
-                      }
-                    ]
+                    "$ref": "#/$defs/blocks/properties/row"
+                  },
+                  {
+                    "$ref": "#/$defs/blocks/properties/divider"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/filterButtons"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/filterDropdown"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/textArea"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/textInput"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/numericInput"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/hiddenInput"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/select"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/multiSelect"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/checkbox"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/datePicker"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/table"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/text"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/markdown"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/file"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/alert"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/image"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/button"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/iconButton"
+                  },
+                  {
+                    "$ref": "#/$defs/elements/properties/dropdown"
                   }
                 ]
               },
@@ -734,7 +848,7 @@
               }
             }
           },
-          "anyOf": [
+          "oneOf": [
             {
               "required": ["type", "id", "label"]
             },
@@ -768,7 +882,7 @@
               "type": "number"
             }
           },
-          "anyOf": [
+          "oneOf": [
             {
               "required": ["type", "id", "label"]
             },
@@ -802,7 +916,7 @@
               "type": "number"
             }
           },
-          "anyOf": [
+          "oneOf": [
             {
               "required": ["type", "id", "label"]
             },
@@ -839,7 +953,7 @@
               "type": "number"
             }
           },
-          "anyOf": [
+          "oneOf": [
             {
               "required": ["type", "id", "label"]
             },
@@ -847,6 +961,21 @@
               "required": ["type", "id", "placeholder"]
             }
           ]
+        },
+        "hiddenInput": {
+          "title": "Hidden Input",
+          "description": "A Hidden Input field",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["hiddenInput"]
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "id"]
         },
         "select": {
           "title": "Select",
@@ -884,7 +1013,7 @@
               "type": "boolean"
             }
           },
-          "anyOf": [
+          "oneOf": [
             {
               "required": ["type", "id", "label", "options"]
             },
@@ -935,7 +1064,7 @@
               "type": "number"
             }
           },
-          "anyOf": [
+          "oneOf": [
             {
               "required": ["type", "id", "label", "options"]
             },
@@ -971,7 +1100,7 @@
               "type": "string"
             }
           },
-          "anyOf": [
+          "oneOf": [
             {
               "required": ["type", "id", "label"]
             },
@@ -1023,6 +1152,7 @@
                     "type": "string"
                   }
                 },
+                "minItems": 1,
                 "required": ["label", "value"]
               }
             }
@@ -1104,26 +1234,292 @@
                             {
                               "type": "object",
                               "properties": {
-                                "id": {
-                                  "type": "string"
+                                "icon": {
+                                  "$ref": "#/$defs/elements/properties/icon/properties/name"
                                 },
                                 "label": {
                                   "type": "string"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "accessor": {
+                                  "type": "string",
+                                  "description": "The optional key to determine if the action is disabled"
+                                },
+                                "action": {
+                                  "type": "string",
+                                  "enum": ["custom"]
                                 }
                               },
-                              "required": ["id", "label"]
+                              "oneOf": [
+                                {
+                                  "required": ["icon", "id", "action"]
+                                },
+                                {
+                                  "required": ["label", "id", "action"]
+                                }
+                              ]
                             },
                             {
                               "type": "object",
                               "properties": {
+                                "icon": {
+                                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                                },
                                 "id": {
                                   "type": "string"
                                 },
-                                "icon": {
-                                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                                "accessor": {
+                                  "type": "string",
+                                  "description": "The optional key to determine if the action is disabled"
+                                },
+                                "action": {
+                                  "type": "string",
+                                  "enum": ["insertContent"]
+                                },
+                                "content": {
+                                  "type": "string"
+                                },
+                                "src": {
+                                  "type": "string"
                                 }
                               },
-                              "required": ["id", "icon"]
+                              "oneOf": [
+                                {
+                                  "required": ["icon", "id", "action", "content"]
+                                },
+                                {
+                                  "required": ["icon", "id", "action", "src"]
+                                },
+                                {
+                                  "required": ["label", "id", "action", "content"]
+                                },
+                                {
+                                  "required": ["label", "id", "action", "src"]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "icon": {
+                                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "accessor": {
+                                  "type": "string",
+                                  "description": "The optional key to determine if the action is disabled"
+                                },
+                                "action": {
+                                  "type": "string",
+                                  "enum": ["insertAttachment"]
+                                },
+                                "src": {
+                                  "type": "string"
+                                }
+                              },
+                              "oneOf": [
+                                {
+                                  "required": ["icon", "id", "src", "action"]
+                                },
+                                {
+                                  "required": ["label", "id", "src", "action"]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "icon": {
+                                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "accessor": {
+                                  "type": "string",
+                                  "description": "The optional key to determine if the action is disabled"
+                                },
+                                "action": {
+                                  "type": "string",
+                                  "enum": ["openModal"]
+                                },
+                                "surfaceId": {
+                                  "type": "string"
+                                }
+                              },
+                              "oneOf": [
+                                {
+                                  "required": ["icon", "id", "action", "surfaceId"]
+                                },
+                                {
+                                  "required": ["label", "id", "action", "surfaceId"]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "icon": {
+                                  "$ref": "#/$defs/elements/properties/icon/properties/name"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "accessor": {
+                                  "type": "string",
+                                  "description": "The optional key to determine if the action is disabled"
+                                },
+                                "href": {
+                                  "type": "string"
+                                }
+                              },
+                              "oneOf": [
+                                {
+                                  "required": ["icon", "id", "href"]
+                                },
+                                {
+                                  "required": ["label", "id", "href"]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "array",
+                                  "items": {
+                                    "anyOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "label": {
+                                            "type": "string"
+                                          },
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "action": {
+                                            "type": "string",
+                                            "enum": ["custom"]
+                                          },
+                                          "accessor": {
+                                            "type": "string",
+                                            "description": "The optional key to determine if the action is disabled"
+                                          }
+                                        },
+                                        "required": ["label", "id", "action"]
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "label": {
+                                            "type": "string"
+                                          },
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "action": {
+                                            "type": "string",
+                                            "enum": ["insertContent"]
+                                          },
+                                          "content": {
+                                            "type": "string"
+                                          },
+                                          "src": {
+                                            "type": "string"
+                                          },
+                                          "accessor": {
+                                            "type": "string",
+                                            "description": "The optional key to determine if the action is disabled"
+                                          }
+                                        },
+                                        "oneOf": [
+                                          {
+                                            "required": ["label", "id", "action", "content"]
+                                          },
+                                          {
+                                            "required": ["label", "id", "action", "src"]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "label": {
+                                            "type": "string"
+                                          },
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "action": {
+                                            "type": "string",
+                                            "enum": ["insertAttachment"]
+                                          },
+                                          "src": {
+                                            "type": "string"
+                                          },
+                                          "accessor": {
+                                            "type": "string",
+                                            "description": "The optional key to determine if the action is disabled"
+                                          }
+                                        },
+                                        "required": ["label", "id", "action", "src"]
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "label": {
+                                            "type": "string"
+                                          },
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "action": {
+                                            "type": "string",
+                                            "enum": ["openModal"]
+                                          },
+                                          "surfaceId": {
+                                            "type": "string"
+                                          },
+                                          "accessor": {
+                                            "type": "string",
+                                            "description": "The optional key to determine if the action is disabled"
+                                          }
+                                        },
+                                        "required": ["label", "id", "action", "surfaceId"]
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "label": {
+                                            "type": "string"
+                                          },
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "href": {
+                                            "type": "string"
+                                          },
+                                          "accessor": {
+                                            "type": "string",
+                                            "description": "The optional key to determine if the action is disabled"
+                                          }
+                                        },
+                                        "required": ["label", "id", "href"]
+                                      }
+                                    ],
+                                    "minItems": 1
+                                  }
+                                }
+                              },
+                              "required": ["options"]
                             }
                           ]
                         },
@@ -1186,6 +1582,20 @@
             "typeface": {
               "type": "string",
               "enum": ["header1", "header2", "header3", "paragraph", "caption", "label"]
+            },
+            "content": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "content"]
+        },
+        "markdown": {
+          "title": "Markdown",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["markdown"]
             },
             "content": {
               "type": "string"
@@ -1327,7 +1737,7 @@
                   "type": "string"
                 }
               },
-              "anyOf": [
+              "oneOf": [
                 {
                   "required": ["type", "label", "id", "action", "content"]
                 },
@@ -1429,7 +1839,7 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "enum": ["button"]
+                  "enum": ["iconButton"]
                 },
                 "icon": {
                   "$ref": "#/$defs/elements/properties/icon/properties/name"
@@ -1448,7 +1858,7 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "enum": ["button"]
+                  "enum": ["iconButton"]
                 },
                 "icon": {
                   "$ref": "#/$defs/elements/properties/icon/properties/name"
@@ -1467,7 +1877,7 @@
                   "type": "string"
                 }
               },
-              "anyOf": [
+              "oneOf": [
                 {
                   "required": ["type", "icon", "id", "action", "content"]
                 },
@@ -1480,7 +1890,7 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "enum": ["button"]
+                  "enum": ["iconButton"]
                 },
                 "icon": {
                   "$ref": "#/$defs/elements/properties/icon/properties/name"
@@ -1502,7 +1912,7 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "enum": ["button"]
+                  "enum": ["iconButton"]
                 },
                 "icon": {
                   "$ref": "#/$defs/elements/properties/icon/properties/name"
@@ -1524,7 +1934,7 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "enum": ["button"]
+                  "enum": ["iconButton"]
                 },
                 "icon": {
                   "$ref": "#/$defs/elements/properties/icon/properties/name"
@@ -1539,6 +1949,133 @@
               "required": ["type", "icon", "id", "href"]
             }
           ]
+        },
+        "dropdown": {
+          "title": "Dropdown",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["dropdown"]
+            },
+            "label": {
+              "type": "string"
+            },
+            "icon": {
+              "$ref": "#/$defs/elements/properties/icon/properties/name"
+            },
+            "placement": {
+              "type": "string",
+              "enum": ["start", "end"]
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": ["submit", "reset", "custom", "closeModal"]
+                      }
+                    },
+                    "required": ["label", "id", "action"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": ["insertContent"]
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "src": {
+                        "type": "string"
+                      }
+                    },
+                    "oneOf": [
+                      {
+                        "required": ["label", "id", "action", "content"]
+                      },
+                      {
+                        "required": ["label", "id", "action", "src"]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": ["insertAttachment"]
+                      },
+                      "src": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["label", "id", "action", "src"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": ["openModal"]
+                      },
+                      "surfaceId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["label", "id", "action", "surfaceId"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "href": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["label", "id", "href"]
+                  }
+                ],
+                "minItems": 1
+              }
+            }
+          },
+          "required": ["type", "options"]
         },
         "icon": {
           "title": "Icon",

@@ -1,7 +1,7 @@
 import type { Request } from 'express';
 
 import { AppController } from '../common/app-controller';
-import type { UIKitRequestBody, UIKitResponseBody } from '../types';
+import type { CanvasRequestBody, CanvasResponseBody } from '../types';
 
 export default class ExampleAppController extends AppController {
   public static moduleName = 'ExampleApp';
@@ -10,7 +10,7 @@ export default class ExampleAppController extends AppController {
     super(request);
   }
 
-  protected async run(requestBody: UIKitRequestBody) {
+  protected async run(requestBody: CanvasRequestBody) {
     const responseBody = {
       surfaces: [
         {
@@ -29,7 +29,7 @@ export default class ExampleAppController extends AppController {
           ],
         },
       ],
-    } satisfies UIKitResponseBody;
+    } satisfies CanvasResponseBody;
 
     return responseBody;
   }

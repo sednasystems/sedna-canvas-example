@@ -1,27 +1,47 @@
-export type Notification = {
-  id: string;
-  message: string;
-  level: 'INFO' | 'WARNING' | 'ERROR';
-  button?: {
-    id: string;
-    label: string;
-  } & (
-    | {
-        href: string;
-      }
-    | {
-        action: 'custom';
-      }
-  );
+type ActionIdentifier = string;
+
+type SubmitAction = {
+  action: 'submit';
 };
 
-export type Action = string;
-
-export type State = {
-  [k: string]: null | string | number | boolean | (string | number)[];
+type ResetAction = {
+  action: 'reset';
 };
 
-export type UIKitRequestBody = {
+type CustomAction = {
+  action: 'custom';
+};
+
+type InsertContentAction = {
+  action: 'insertContent';
+} & (
+  | {
+      src: string;
+    }
+  | {
+      content: string;
+    }
+);
+
+type InsertAttachmentAction = {
+  action: 'insertAttachment';
+  src: string;
+};
+
+type OpenModalAction = {
+  action: 'openModal';
+  surfaceId: string;
+};
+
+type CloseModalAction = {
+  action: 'closeModal';
+};
+
+type State = Record<string, undefined | null | string | number | boolean | string[]>;
+
+type ReferenceData = Record<string, Record<string, unknown> | Record<string, unknown>[]>;
+
+export type CanvasRequestBody = {
   appId: string;
   version: '2024-06-01';
   user: {
@@ -40,7 +60,6 @@ export type UIKitRequestBody = {
     ssoEmail: string | null;
     href: string;
   };
-
   company: {
     id: string;
     name: string;
@@ -196,53 +215,50 @@ export type UIKitRequestBody = {
       | null;
   };
   state?: State;
-  action?: Action;
+  referenceData?: ReferenceData;
+  action?: ActionIdentifier;
 };
 
-type SurfacePanel = {
+export type Panel = {
   type: 'panel';
   id: string;
   blocks: Block[];
 };
 
-type SurfaceModal = {
+export type Modal = {
   type: 'modal';
   id: string;
+  defaultOpen?: boolean;
+  wide?: boolean;
   blocks: Block[];
 };
 
-type SurfaceDashboard = {
+export type Dashboard = {
   type: 'dashboard';
   id: string;
   blocks: Block[];
 };
 
-type SurfaceCard = {
+export type Card = {
   type: 'card';
   id: string;
   blocks: Block[];
 };
 
-type Surface = SurfacePanel | SurfaceModal | SurfaceDashboard | SurfaceCard;
+type Surface = Panel | Modal | Dashboard | Card;
 
-type HeaderBlock = {
+type Header = {
   type: 'header';
   title?: string;
-  elements?: Element[];
+  elements?: BlockElement[];
 };
 
-type FooterBlock = {
+type Footer = {
   type: 'footer';
-  elements: Element[];
+  elements: BlockElement[];
 };
 
-type RowBlock = {
-  type: 'row';
-  justify?: 'left' | 'center' | 'right';
-  elements: Element[];
-};
-
-type TabsBlock = {
+type Tabs = {
   type: 'tabs';
   id: string;
   tabItems: {
@@ -252,40 +268,43 @@ type TabsBlock = {
   }[];
 };
 
-type SectionBlock = {
+type Row = {
+  type: 'row';
+  justify?: 'left' | 'center' | 'right';
+  elements: BlockElement[];
+};
+
+type Section = {
   type: 'section';
   collapsible?: boolean;
   title?: string;
   columns?: number;
   columnSpan?: number;
   justify?: 'left' | 'center' | 'right';
-  elements: (SectionBlock | RowBlock | DividerBlock | Element)[];
+  elements: (SectionBlock | BlockElement)[];
 };
 
-type DividerBlock = {
+type Divider = {
   type: 'divider';
 };
 
-type IFrameBlock = {
+type Iframe = {
   type: 'iframe';
   src: string;
 };
 
-type Block =
-  | HeaderBlock
-  | FooterBlock
-  | RowBlock
-  | TabsBlock
-  | SectionBlock
-  | DividerBlock
-  | IFrameBlock;
+type Block = Header | Footer | Row | Tabs | Section | Divider | Iframe;
 
-// Interfaces for elements
+type Option = {
+  label: string;
+  value: string;
+};
+
 type FilterButton = {
   type: 'filterButtons';
   label: string;
   id: string;
-  options: { label: string; value: string }[];
+  options: Option[];
 };
 
 type FilterDropdown = {
@@ -293,7 +312,7 @@ type FilterDropdown = {
   label?: string;
   id: string;
   placeholder?: string;
-  options: { label: string; value: string }[];
+  options: Option[];
 };
 
 type TextArea = {
@@ -324,11 +343,16 @@ type NumericInput = {
   max?: number;
 };
 
+type HiddenInput = {
+  type: 'hiddenInput';
+  id: string;
+};
+
 type Select = {
   type: 'select';
   label?: string;
   id: string;
-  options: { label: string; value: string }[];
+  options: Option[];
   placeholder?: string;
   required?: boolean;
 };
@@ -337,7 +361,7 @@ type MultiSelect = {
   type: 'multiSelect';
   label?: string;
   id: string;
-  options: { label: string; value: string }[];
+  options: Option[];
   placeholder?: string;
   required?: boolean;
   minSelection?: number;
@@ -364,7 +388,7 @@ type CheckboxGroup = {
   type: 'checkboxGroup';
   label: string;
   id: string;
-  options: { label: string; value: string }[];
+  options: Option[];
 };
 
 type Table = {
@@ -374,14 +398,67 @@ type Table = {
   data: TableRowData[];
 };
 
-type ColumnDefinition = {
-  header?: string;
-  accessor: string;
-  type?: 'string' | 'number' | 'date' | 'dateTime' | 'boolean';
-  align?: 'left' | 'center' | 'right';
-  minWidth?: number;
-  maxWidth?: number;
-};
+type TableInteraction =
+  | CustomAction
+  | InsertContentAction
+  | InsertAttachmentAction
+  | OpenModalAction
+  | LinkNonAction;
+
+export type TableAction =
+  | {
+      label?: string;
+      options: (DropdownOption &
+        TableInteraction & {
+          /**
+           * The key to access a boolean value in the row data that determines if the action is disabled
+           */
+          accessor?: string;
+        })[];
+    }
+  | ({
+      id: string;
+      label: string;
+      /**
+       * The key to access a boolean value in the row data that determines if the action is disabled
+       */
+      accessor?: string;
+    } & TableInteraction)
+  | ({
+      id: string;
+      icon: Icon['name'];
+      /**
+       * The key to access a boolean value in the row data that determines if the action is disabled
+       */
+      accessor?: string;
+    } & TableInteraction);
+
+type ColumnDefinition =
+  | {
+      header?: string;
+      /**
+       * The key to access the value in the row data
+       */
+      accessor: string;
+      type?: 'string' | 'number' | 'date' | 'boolean' | 'dateTime';
+      align?: 'left' | 'center' | 'right';
+      /**
+       * The min width of the column in pixels
+       */
+      minWidth?: number;
+      /**
+       * The min width of the column in pixels
+       */
+      maxWidth?: number;
+    }
+  | {
+      type: 'checkbox';
+    }
+  | {
+      type: 'actions';
+      minWidth?: number;
+      actions: TableAction[];
+    };
 
 type TableRowData = {
   id: string;
@@ -392,6 +469,11 @@ type Text = {
   type: 'text';
   variant?: 'primary' | 'secondary' | 'disabled' | 'error';
   typeface?: 'header1' | 'header2' | 'header3' | 'paragraph' | 'caption' | 'label';
+  content: string;
+};
+
+type Markdown = {
+  type: 'markdown';
   content: string;
 };
 
@@ -429,42 +511,45 @@ type Image = {
   description?: string;
 };
 
+type LinkNonAction = {
+  action?: never;
+  href: string;
+};
+
+type Interaction =
+  | SubmitAction
+  | ResetAction
+  | CustomAction
+  | InsertContentAction
+  | InsertAttachmentAction
+  | OpenModalAction
+  | CloseModalAction
+  | LinkNonAction;
+
 type Button = {
   type: 'button';
   label: string;
   id: string;
-  action:
-    | 'submit'
-    | 'reset'
-    | 'custom'
-    | 'closeModal'
-    | 'insertContent'
-    | 'insertAttachment'
-    | 'openModal';
   variant?: 'primary' | 'secondary' | 'ghost';
   leftIcon?: Icon['name'];
-  content?: string;
-  src?: string;
-  surfaceId?: string;
-  href?: string;
-};
+} & Interaction;
 
 type IconButton = {
   type: 'iconButton';
   icon: Icon['name'];
   id: string;
-  action:
-    | 'submit'
-    | 'reset'
-    | 'custom'
-    | 'closeModal'
-    | 'insertContent'
-    | 'insertAttachment'
-    | 'openModal';
-  content?: string;
-  src?: string;
-  surfaceId?: string;
-  href?: string;
+} & Interaction;
+
+type Dropdown = {
+  type: 'dropdown';
+  label?: string;
+  icon?: Icon['name'];
+  options: (DropdownOption & Interaction)[];
+};
+
+type DropdownOption = {
+  id: string;
+  label: string;
 };
 
 type Icon = {
@@ -602,7 +687,7 @@ type Icon = {
     | 'zip';
 };
 
-type Element =
+type BlockElement =
   | FilterButton
   | FilterDropdown
   | TextArea
@@ -613,22 +698,47 @@ type Element =
   | DatePicker
   | Checkbox
   | CheckboxGroup
+  | HiddenInput
   | Table
   | Text
+  | Markdown
   | File
   | Alert
   | Image
   | Button
   | IconButton
+  | Dropdown
   | Icon;
 
-export type UIKitResponseBody = {
+type SectionBlock = Section | Divider | Row;
+
+type MessageMutationEntity = {
+  type: 'MESSAGE';
+  id: string;
+  subject?: string | null;
+  to?: string[];
+  cc?: string[];
+  bcc?: string[];
+};
+
+type Notification = {
+  id: string;
+  message: string;
+  level: 'INFO' | 'WARNING' | 'ERROR';
+  button?: {
+    id: string;
+    label: string;
+  } & (LinkNonAction | CustomAction);
+};
+
+type ValidationErrors = Record<string, string | undefined>;
+
+export type CanvasResponseBody = {
   surfaces: Surface[];
   state?: State;
+  referenceData?: ReferenceData;
   notifications?: Notification[];
-  validationErrors?: {
-    [key: string]: string;
-  };
+  validationErrors?: ValidationErrors;
   stale?: {
     type:
       | 'MESSAGE'
@@ -642,4 +752,7 @@ export type UIKitResponseBody = {
       | 'CRM_CONTACT_GROUP';
     id: string;
   }[];
+  mutation?: {
+    entity: MessageMutationEntity;
+  };
 };

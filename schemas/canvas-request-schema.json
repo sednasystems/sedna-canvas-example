@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://app.sednanetwork.com/uikit/2024-06-01/request.schema.json",
-  "title": "UIKit Request Schema",
-  "description": "The request schema for UIKit protocol exchange",
+  "$id": "https://app.sednanetwork.com/canvas/2024-06-01/request.schema.json",
+  "title": "Canvas Request Schema",
+  "description": "The request schema for Canvas protocol exchange",
   "type": "object",
   "properties": {
     "appId": {
@@ -158,6 +158,30 @@
                   },
                   {
                     "type": "number"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "referenceData": {
+      "title": "Reference data",
+      "description": "Source of the data of various blocks or elements, keyed by the reference id",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]+$": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object"
                   }
                 ]
               }

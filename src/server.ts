@@ -22,5 +22,5 @@ app.post('/', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`[INFO] Server is running on http://localhost:${port}`);
+  console.info(`[INFO] Server running on port ${port}`);
 });

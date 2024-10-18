@@ -1,7 +1,7 @@
 import type { Request } from 'express';
 
 import type { AppController } from './common/app-controller';
-import type { UIKitRequestBody } from './types';
+import type { CanvasRequestBody } from './types';
 
 type Config = Record<string, { tenantId: string; appId: string }[]>;
 
@@ -44,7 +44,7 @@ export function getController<T extends AppController>(
   config: Config,
   controllers: Map<string, ControllerConstructor<T>>,
 ) {
-  const body = request.body as UIKitRequestBody;
+  const body = request.body as CanvasRequestBody;
   const appModuleName = Object.entries(config).find(([, appConfig]) =>
     appConfig.some((app) => app.appId === body.appId && app.tenantId === body.company.id),
   )?.[0];

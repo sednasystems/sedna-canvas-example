@@ -1,12 +1,12 @@
 import type { Request } from 'express';
 
-import type { UIKitRequestBody, UIKitResponseBody } from '../types';
+import type { CanvasRequestBody, CanvasResponseBody } from '../types';
 
 /**
  * Base class for all app controllers
  */
 export abstract class AppController {
-  private _requestBody: UIKitRequestBody;
+  private _requestBody: CanvasRequestBody;
 
   /**
    * A unique name for the module. This is necessary to dynamically load and map controllers.
@@ -18,14 +18,14 @@ export abstract class AppController {
   }
 
   /**
-   * Returns the UIKitResponse body by calling the abstract run method
+   * Returns the CanvasResponse body by calling the abstract run method
    */
-  public getResponse(): Promise<UIKitResponseBody> {
+  public getResponse(): Promise<CanvasResponseBody> {
     return this.run(this._requestBody);
   }
 
   /**
-   * Abstract method that must be implemented by all controllers. This method must return the UIKit response body.
+   * Abstract method that must be implemented by all controllers. This method must return the canvas response body.
    */
-  protected abstract run(requestBody: UIKitRequestBody): Promise<UIKitResponseBody>;
+  protected abstract run(requestBody: CanvasRequestBody): Promise<CanvasResponseBody>;
 }
