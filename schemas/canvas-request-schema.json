@@ -1,8 +1,8 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://app.sednanetwork.com/canvas/2024-06-01/request.schema.json",
-  "title": "Canvas Request Schema",
-  "description": "The request schema for Canvas protocol exchange",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://app.sednanetwork.com/camvas/2024-06-01/request.schema.json",
+  "title": "Sedna Canvas Request Schema",
+  "description": "The request schema for Sedna Canvas protocol exchange",
   "type": "object",
   "properties": {
     "appId": {
@@ -36,7 +36,7 @@
         "teams": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/entityRels/team"
+            "$ref": "#/definitions/entityRels/team"
           }
         },
         "emailAddress": {
@@ -46,7 +46,7 @@
           "type": ["string", "null"]
         },
         "href": {
-          "$ref": "#/$defs/href"
+          "$ref": "#/definitions/href"
         }
       },
       "required": [
@@ -99,31 +99,31 @@
         "entity": {
           "oneOf": [
             {
-              "$ref": "#/$defs/entity/message"
+              "$ref": "#/definitions/entity/message"
             },
             {
-              "$ref": "#/$defs/entity/pulsePosition"
+              "$ref": "#/definitions/entity/pulsePosition"
             },
             {
-              "$ref": "#/$defs/entity/pulseCargo"
+              "$ref": "#/definitions/entity/pulseCargo"
             },
             {
-              "$ref": "#/$defs/entity/pulsePositionFixtureWorkspace"
+              "$ref": "#/definitions/entity/pulsePositionFixtureWorkspace"
             },
             {
-              "$ref": "#/$defs/entity/pulseCargoFixtureWorkspace"
+              "$ref": "#/definitions/entity/pulseCargoFixtureWorkspace"
             },
             {
-              "$ref": "#/$defs/entity/crmPerson"
+              "$ref": "#/definitions/entity/crmPerson"
             },
             {
-              "$ref": "#/$defs/entity/crmDepartment"
+              "$ref": "#/definitions/entity/crmDepartment"
             },
             {
-              "$ref": "#/$defs/entity/crmCompany"
+              "$ref": "#/definitions/entity/crmCompany"
             },
             {
-              "$ref": "#/$defs/entity/crmContactGroup"
+              "$ref": "#/definitions/entity/crmContactGroup"
             }
           ]
         }
@@ -136,30 +136,64 @@
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9_-]+$": {
-          "oneOf": [
+          "anyOf": [
             {
               "type": "null"
             },
             {
-              "type": "string"
+              "type": "string",
+              "description": "Text input, text area, select, and date picker value"
             },
             {
-              "type": "number"
+              "type": "number",
+              "description": "Numeric input value"
             },
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Checkbox value"
             },
             {
               "type": "array",
+              "description": "Table rows, checkbox group selection, and multiselect selection",
               "items": {
-                "oneOf": [
-                  {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "description": "Data grid state",
+              "properties": {
+                "selectedRows": {
+                  "type": "array",
+                  "items": {
                     "type": "string"
-                  },
-                  {
-                    "type": "number"
                   }
-                ]
+                },
+                "sorting": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "desc": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["id"]
+                  }
+                },
+                "page": {
+                  "type": "number"
+                },
+                "pageSize": {
+                  "type": "number",
+                  "maximum": 100
+                },
+                "filters": {
+                  "type": "object"
+                }
               }
             }
           ]
@@ -168,22 +202,87 @@
     },
     "referenceData": {
       "title": "Reference data",
-      "description": "Source of the data of various blocks or elements, keyed by the reference id",
+      "description": "Optional source of the data of various blocks or elements, keyed by the element id",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9_-]+$": {
-          "oneOf": [
+          "anyOf": [
             {
-              "type": "object"
-            },
-            {
-              "type": "array",
-              "items": {
-                "oneOf": [
-                  {
+              "type": "object",
+              "description": "Cached Total and data for dataGrid",
+              "properties": {
+                "total": {
+                  "description": "Total number of rows. Define total to paginate",
+                  "type": "number"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
                     "type": "object"
                   }
-                ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "description": "Cached data for select and multiSelect",
+              "properties": {
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/common/optionProperties"
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "description": "Filter request params for select and multiSelect",
+              "properties": {
+                "filter": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["value"]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "description": "Filter request params for dataGrid",
+              "properties": {
+                "filter": {
+                  "type": "object",
+                  "properties": {
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "sorting": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "desc": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["id"]
+                      }
+                    },
+                    "filters": {
+                      "type": "object"
+                    }
+                  }
+                }
               }
             }
           ]
@@ -192,12 +291,12 @@
     },
     "action": {
       "title": "Action",
-      "description": "The action to be performed by the app, where action is the id of an interactive element such as a button",
+      "description": "The identifier of the interactive element where an action was triggered",
       "type": "string"
     }
   },
   "required": ["appId", "version", "user", "company", "context"],
-  "$defs": {
+  "definitions": {
     "entity": {
       "message": {
         "description": "A message in Sedna",
@@ -216,50 +315,46 @@
             "type": ["string", "null"]
           },
           "from": {
-            "type": ["string", "null"],
-            "format": "email"
+            "type": ["string", "null"]
           },
           "to": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "email"
+              "type": "string"
             }
           },
           "cc": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "email"
+              "type": "string"
             }
           },
           "bcc": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "email"
+              "type": "string"
             }
           },
           "jobReferences": {
             "type": "array",
             "items": {
-              "$ref": "#/$defs/entityRels/jobReference"
+              "$ref": "#/definitions/entityRels/jobReference"
             }
           },
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/$defs/entityRels/category"
+              "$ref": "#/definitions/entityRels/category"
             }
           },
           "teams": {
             "type": "array",
             "items": {
-              "$ref": "#/$defs/entityRels/team"
+              "$ref": "#/definitions/entityRels/team"
             }
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": [
@@ -288,22 +383,22 @@
             "const": "PULSE_POSITION"
           },
           "vessel": {
-            "$ref": "#/$defs/entityRels/pulseVessel"
+            "$ref": "#/definitions/entityRels/pulseVessel"
           },
           "area": {
-            "$ref": "#/$defs/entityRels/pulseArea"
+            "$ref": "#/definitions/entityRels/pulseArea"
           },
           "openDate": {
-            "$ref": "#/$defs/entityRels/pulseDateRange"
+            "$ref": "#/definitions/entityRels/pulseDateRange"
           },
           "currentDwtInMt": {
             "type": "number"
           },
           "customColumns": {
-            "$ref": "#/$defs/entityRels/pulseCustomColumns"
+            "$ref": "#/definitions/entityRels/pulseCustomColumns"
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": [
@@ -331,17 +426,17 @@
           "loadAreas": {
             "type": "array",
             "items": {
-              "$ref": "#/$defs/entityRels/pulseArea"
+              "$ref": "#/definitions/entityRels/pulseArea"
             }
           },
           "dischargeAreas": {
             "type": "array",
             "items": {
-              "$ref": "#/$defs/entityRels/pulseArea"
+              "$ref": "#/definitions/entityRels/pulseArea"
             }
           },
           "loadDate": {
-            "$ref": "#/$defs/entityRels/pulseDateRange"
+            "$ref": "#/definitions/entityRels/pulseDateRange"
           },
           "size": {
             "type": ["object", "null"],
@@ -361,13 +456,20 @@
             "type": ["string", "null"]
           },
           "charterType": {
-            "enum": [null, "TIME", "VOYAGE", "UNKNOWN"]
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "enum": ["TIME", "VOYAGE", "UNKNOWN"]
+              }
+            ]
           },
           "customColumns": {
-            "$ref": "#/$defs/entityRels/pulseCustomColumns"
+            "$ref": "#/definitions/entityRels/pulseCustomColumns"
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": [
@@ -410,7 +512,7 @@
             }
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": ["id", "type", "name", "userIds", "cargoIds", "href"]
@@ -441,7 +543,7 @@
             }
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": ["id", "type", "name", "userIds", "positionIds", "href"]
@@ -457,7 +559,7 @@
             "const": "CRM_PERSON"
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": ["id", "href"]
@@ -473,7 +575,7 @@
             "const": "CRM_DEPARTMENT"
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": ["id", "href"]
@@ -489,7 +591,7 @@
             "const": "CRM_COMPANY"
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": ["id", "href"]
@@ -505,7 +607,7 @@
             "const": "CRM_CONTACT_GROUP"
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": ["id", "href"]
@@ -526,7 +628,7 @@
             "type": ["string", "null"]
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": ["id", "name", "foreignKey", "href"]
@@ -554,7 +656,7 @@
             "type": ["string", "null"]
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": ["id", "name", "foreignKey", "type", "attributes", "source", "href"]
@@ -573,7 +675,7 @@
             "type": ["string", "null"]
           },
           "href": {
-            "$ref": "#/$defs/href"
+            "$ref": "#/definitions/href"
           }
         },
         "required": ["id", "name", "label", "href"]
