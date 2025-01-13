@@ -6,7 +6,7 @@ This project contains an example server built with the Express framework written
 
 - Use the Node version found in the .nvmrc file. This project uses `v21.1.0`.
 - `pnpm install`
-- `mv config.example.json config.json`
+- `cp config.example.json config.json`
 - Update `config.json` with correct app credentials.
 
   If using workshop, these can be found by running `workshop/bin/create-canvas-app.sh` from the `services` repo
