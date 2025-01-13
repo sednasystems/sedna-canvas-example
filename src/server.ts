@@ -6,7 +6,7 @@ import { AppError, getController, loadConfig } from './utils';
 
 const app = express();
 app.use(bodyParser.json({ type: 'application/json' }));
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 4444;
 
 app.post('/', async (req, res) => {
   try {
