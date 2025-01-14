@@ -9,7 +9,7 @@ This project contains an example server built with the Express framework written
 - `cp config.example.json config.json`
 - Update `config.json` with correct app credentials.
 
-  If using workshop, these can be found by running `workshop/bin/create-canvas-app.sh` from the `services` repo
+  If using workshop in the services repo, the app ID is printed when running `workshop/bin/manage-canvas-apps.sh create` - you can also see it (and all apps) with `workshop/bin/manage-canvas-apps.sh list`.
 
 - `pnpm dev` to start the Express server (this updates on changes via `nodemon`)
 
