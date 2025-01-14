@@ -5,11 +5,15 @@ This project contains an example server built with the Express framework written
 ## Quick Start
 
 - Use the Node version found in the .nvmrc file. This project uses `v21.1.0`.
-- Install the dependencies by running `pnpm install`. Here we use pnpm but you can install with a manager of your choice.
-- Rename [`config.example.json`](https://github.com/sednasystems/sedna-canvas-example/blob/main/config.example.json) in the root of the project to `config.json`.
-- To start the server in development, run `pnpm dev`. `npm dev` or `yarn dev` if you are using another package manager. This will start the Express server and `nodemon` will listen to any changes during development.
+- `pnpm install`
+- `cp config.example.json config.json`
+- Update `config.json` with correct app credentials.
 
-## Adding an App
+  If using workshop in the services repo, the app ID is printed when running `workshop/bin/manage-canvas-apps.sh create` - you can also see it (and all apps) with `workshop/bin/manage-canvas-apps.sh list`.
+
+- `pnpm dev` to start the Express server (this updates on changes via `nodemon`)
+
+## Adding a new App
 
 - Rename the example controller file [`example-app.ts`](https://github.com/sednasystems/sedna-canvas-example/blob/main/src/controllers/example-app.ts) in `src/controllers` to a name of your choice.
 - Rename `ExampleAppController` and the `moduleName` in the class. The `moduleName` must be unique for all additional apps.
