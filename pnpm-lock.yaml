@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@sednanetwork/canvas-schema':
+        specifier: ^0.0.6
+        version: 0.0.6
       body-parser:
         specifier: ^1.20.3
         version: 1.20.3
@@ -189,6 +192,9 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@sednanetwork/canvas-schema@0.0.6':
+    resolution: {integrity: sha512-7F2/KeGvcFJBIzWpWw1Nd0FI6LSwFQN2n5o0ctqaTfOJCEoaDtoQ1F5ZexmHkkmqz93XVXzBPmCz7nLroDnFrQ==}
 
   '@trivago/prettier-plugin-sort-imports@4.3.0':
     resolution: {integrity: sha512-r3n0onD3BTOVUNPhR4lhVK4/pABGpbA7bW3eumZnYdKaHkf1qEC+Mag6DPbGNuuh0eG8AaYj+YqmVHSiGslaTQ==}
@@ -1256,6 +1262,8 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
+
+  '@sednanetwork/canvas-schema@0.0.6': {}
 
   '@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.3.3)':
     dependencies:
