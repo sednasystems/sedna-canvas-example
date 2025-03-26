@@ -1,19 +1,20 @@
+import { CanvasRequest, CanvasResponse } from '@sednanetwork/canvas-schema';
 import bodyParser from 'body-parser';
 import express, { Request } from 'express';
 
 import exampleApp from './controllers/example-app';
-import { CanvasRequestBody, CanvasResponseBody } from './types';
 
 const app = express();
 app.use(bodyParser.json({ type: 'application/json' }));
 const port = process.env.PORT || 4444;
 
-type Controller = (req: CanvasRequestBody) => Promise<CanvasResponseBody> | CanvasResponseBody;
+type Controller = (req: CanvasRequest) => Promise<CanvasResponse> | CanvasResponse;
 
 /**
  * Decides which controller handles the request.
  * Controllers are simply functions (see Controller type)
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getController = (req: Request): Controller => {
   /**
    * You could return different controllers here depending on e.g.
