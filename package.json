@@ -14,7 +14,7 @@
     "pnpm": ">=8.0.0"
   },
   "dependencies": {
-    "@sednanetwork/canvas-schema": "^0.3.0",
+    "@sednasystems/canvas-schema": "^0.3.0",
     "body-parser": "^1.20.3",
     "express": "^4.20.0"
   },
