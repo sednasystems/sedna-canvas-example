@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@sednasystems/canvas-schema':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.12.0
+        version: 0.12.0
       body-parser:
         specifier: ^1.20.3
         version: 1.20.3
@@ -352,8 +352,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@sednasystems/canvas-schema@0.3.0':
-    resolution: {integrity: sha512-wz3ZpLIr74Uj5CcfPRaT4ijjOzYFbJUJdIcaSRKnLPabijxRIiuUkP1DAuZwYYcMoIzNJNSnF8o96yu5ZVcidw==, tarball: https://npm.pkg.github.com/download/@sednasystems/canvas-schema/0.3.0/05581c3b62500340a497f58746815200004773f9}
+  '@sednasystems/canvas-schema@0.12.0':
+    resolution: {integrity: sha512-fVYt5XhVZKXaQ6wTp7anGh3VmlhI0NmjdjqTIz5X2FETWNkWa0G6qw6mG8sAg60d2LP6OSXD4dcmUIwTLc5c7Q==, tarball: https://npm.pkg.github.com/download/@sednasystems/canvas-schema/0.12.0/02a043b533e4d410b8ed4a5172881ba996d466c9}
 
   '@trivago/prettier-plugin-sort-imports@4.3.0':
     resolution: {integrity: sha512-r3n0onD3BTOVUNPhR4lhVK4/pABGpbA7bW3eumZnYdKaHkf1qEC+Mag6DPbGNuuh0eG8AaYj+YqmVHSiGslaTQ==}
@@ -1516,7 +1516,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@sednasystems/canvas-schema@0.3.0': {}
+  '@sednasystems/canvas-schema@0.12.0': {}
 
   '@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.3.3)':
     dependencies:
