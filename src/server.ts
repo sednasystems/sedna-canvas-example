@@ -1,4 +1,4 @@
-import { CanvasRequest, CanvasResponse } from '@sednanetwork/canvas-schema';
+import { CanvasRequest, CanvasResponse } from '@sednasystems/canvas-schema';
 import bodyParser from 'body-parser';
 import express, { Request } from 'express';
 
