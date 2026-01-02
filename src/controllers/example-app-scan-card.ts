@@ -1,5 +1,44 @@
 import { CanvasResponse } from '@sednasystems/canvas-schema';
 
+const MARKDOWN_CONTENT = `
+# Heading 1
+## Heading 2
+### Heading 3
+**Bold Text**
+*Italic Text*
+***Bold and Italic***
+~~Strikethrough~~
+
+\`Inline Code\`
+
+\`\`\`
+Code Block
+Multiple lines
+\`\`\`
+
+[Link Text](https://example.com)
+
+> Blockquote
+> Multiple lines
+> In blockquote
+
+- Unordered list item 1
+- Unordered list item 2
+  - Nested item 2.1
+  - Nested item 2.2
+
+1. Ordered list item 1
+2. Ordered list item 2
+   1. Nested ordered item 2.1
+   2. Nested ordered item 2.2
+
+---
+
+![Image Alt Text](https://cdn.prod.website-files.com/655391b7802bd90dcdf0b98e/6671a9b9dddcc5149c1b93ec_Sedna_Highlight_Product_Stream_2-p-500.avif)
+
+Text with ==highlight== and ^superscript^ and ~subscript~
+`;
+
 export default function exampleScanCardApp(): CanvasResponse {
   return {
     surfaces: [
@@ -24,7 +63,7 @@ export default function exampleScanCardApp(): CanvasResponse {
             elements: [
               {
                 type: 'markdown',
-                content: '# Heading 1\n## Heading 2\n### Heading 3\n**Bold Text**\n*Italic Text*\n***Bold and Italic***\n~~Strikethrough~~\n\n`Inline Code`\n\n```\nCode Block\nMultiple lines\n```\n\n[Link Text](https://example.com)\n\n> Blockquote\n> Multiple lines\n> In blockquote\n\n- Unordered list item 1\n- Unordered list item 2\n  - Nested item 2.1\n  - Nested item 2.2\n\n1. Ordered list item 1\n2. Ordered list item 2\n   1. Nested ordered item 2.1\n   2. Nested ordered item 2.2\n\n---\n\n![Image Alt Text](https://cdn.prod.website-files.com/655391b7802bd90dcdf0b98e/6671a9b9dddcc5149c1b93ec_Sedna_Highlight_Product_Stream_2-p-500.avif)\n\nText with ==highlight== and ^superscript^ and ~subscript~\n\n'
+                content: MARKDOWN_CONTENT,
               }
             ]
           }
