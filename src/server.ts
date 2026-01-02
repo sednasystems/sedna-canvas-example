@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import express, { Request } from 'express';
 
 import exampleApp from './controllers/example-app';
+import exampleScanCardApp from './controllers/example-app-scan-card';
 
 const app = express();
 app.use(bodyParser.json({ type: 'application/json' }));
@@ -21,7 +22,11 @@ const getController = (req: Request): Controller => {
    * - req.body.appId
    * - req.body.company.id
    * - req.body.context.display
-   */
+
+   * To make a sample Scan Card app response, uncomment the line "return exampleScanCardApp"
+   * and comment out the line "return exampleApp"
+    */
+  //return exampleScanCardApp;
   return exampleApp;
 };
 

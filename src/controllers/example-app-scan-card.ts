@@ -1,6 +1,6 @@
 import { CanvasResponse } from '@sednasystems/canvas-schema';
 
-export default function exampleApp(): CanvasResponse {
+export default function exampleScanCardApp(): CanvasResponse {
   return {
     surfaces: [
       {
