@@ -11,6 +11,6 @@ There is a scan-card example app too. To use this change the import exampleApp l
 ## Quick Start
 
 - Use the Node version found in the .nvmrc file.
-- - Use pnpm v8.0.0 or higher
+- Use pnpm v8.0.0 or higher
 - `pnpm install`
 - `pnpm dev` to start the Express server (this updates on changes via `nodemon`)
