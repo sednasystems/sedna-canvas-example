@@ -1,6 +1,6 @@
 import { CanvasRequest, CanvasResponse } from '@sednasystems/canvas-schema';
 
-export default function exampleApp(requestBody: CanvasRequest): CanvasResponse {
+export default function exampleApp(): CanvasResponse {
   return {
     "surfaces": [
     {
