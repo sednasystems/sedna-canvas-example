@@ -23,7 +23,7 @@ const getController = (req: Request): Controller => {
    * - req.body.company.id
    * - req.body.context.display
 
-   * To make a sample Scan Card app response, comment out the line "return exampleApp"
+   * To make a sample Scan Card App response, comment out the line "return exampleApp"
    * and uncomment the line "return exampleScanCardApp"
     */
   return exampleApp;
