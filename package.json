@@ -10,7 +10,7 @@
     "format": "prettier --write ."
   },
   "engines": {
-    "node": "21.1.0",
+    "node": ">=21.1.0",
     "pnpm": ">=8.0.0"
   },
   "dependencies": {
