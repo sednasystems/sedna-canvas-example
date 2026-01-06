@@ -1,12 +1,25 @@
-import { CanvasResponse } from '@sednasystems/canvas-schema';
+import { CanvasRequest, CanvasResponse } from '@sednasystems/canvas-schema';
 
-const MARKDOWN_CONTENT = `
-# Heading 1
-## Heading 2
-### Heading 3
-**Bold Text**
-*Italic Text*
+export default function exampleScanCardApp(requestBody: CanvasRequest): CanvasResponse {
+
+  const messageSubject =
+    requestBody.context.display === 'MESSAGE_READ' ||
+    requestBody.context.display === 'MESSAGE_COMPOSE'
+      ? (requestBody.context.entity as any)?.subject
+      : null;
+
+
+  const MARKDOWN_CONTENT = `
+# Hello, ${requestBody.user.firstName}!
+## From Company ${requestBody.company?.name}
+### Looking at Message ID: ${requestBody.context.entity?.id}
+
+**MESSAGE SUBJECT**
+
+*${messageSubject || 'N/A'}*
+
 ***Bold and Italic***
+
 ~~Strikethrough~~
 
 \`Inline Code\`
@@ -39,14 +52,13 @@ Multiple lines
 Text with ==highlight== and ^superscript^ and ~subscript~
 `;
 
-export default function exampleScanCardApp(): CanvasResponse {
-  return {
+ return {
     surfaces: [
       {
         type: 'scanCard',
         id: 'simple-card',
         props: {
-          title: 'HELLO WORLD',
+          title: `Hello, ${requestBody.user.firstName}!`,
           link: {
             title: 'External Link',
             href: 'https://sedna.com/'
