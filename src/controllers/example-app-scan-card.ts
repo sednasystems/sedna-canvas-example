@@ -1,11 +1,11 @@
-import { CanvasRequest, CanvasResponse } from '@sednanetwork/canvas-schema';
+import { CanvasRequest, CanvasResponse, ContextMessage } from '@sednanetwork/canvas-schema';
 
 export default function exampleScanCardApp(requestBody: CanvasRequest): CanvasResponse {
 
   const messageSubject =
     requestBody.context.display === 'MESSAGE_READ' ||
     requestBody.context.display === 'MESSAGE_COMPOSE'
-      ? (requestBody.context.entity as any)?.subject
+      ? (requestBody.context.entity as ContextMessage)?.subject
       : null;
 
 
