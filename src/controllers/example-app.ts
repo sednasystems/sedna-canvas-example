@@ -1,4 +1,4 @@
-import { CanvasRequest, CanvasResponse } from '@sednasystems/canvas-schema';
+import { CanvasRequest, CanvasResponse } from '@sednanetwork/canvas-schema';
 
 export default function exampleApp(requestBody: CanvasRequest): CanvasResponse {
   return {
