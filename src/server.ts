@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import express, { Request } from 'express';
 
 import exampleApp from './controllers/example-app';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import exampleScanCardApp from './controllers/example-app-scan-card';
 
 const app = express();
