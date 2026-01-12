@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import express, { Request } from 'express';
 
 import exampleApp from './controllers/example-app';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import exampleScanCardApp from './controllers/example-app-scan-card';
 
 const app = express();
 app.use(bodyParser.json({ type: 'application/json' }));
@@ -21,8 +23,12 @@ const getController = (req: Request): Controller => {
    * - req.body.appId
    * - req.body.company.id
    * - req.body.context.display
-   */
+
+   * To make a sample Scan Card App response, comment out the line "return exampleApp"
+   * and uncomment the line "return exampleScanCardApp"
+    */
   return exampleApp;
+  /* return exampleScanCardApp; */
 };
 
 app.post('/', async (req, res) => {
